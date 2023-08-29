@@ -10,11 +10,26 @@ void main() {
   testWidgets('disposes error stream', (WidgetTester tester) async {
     final StreamController<ErrorAnimationType> controller =
         StreamController<ErrorAnimationType>();
-
+    final gradient = RadialGradient(
+      colors: [
+        Colors.lightBlue,
+        Colors.lightBlue.shade800,
+      ],
+      center: const Alignment(
+        -0.9,
+        -0.6,
+      ),
+      stops: const [
+        0.0,
+        1.0,
+      ],
+      radius: 2.4,
+    );
     final Widget app = Builder(
       builder: (context) => MaterialApp(
         home: Scaffold(
           body: PinCodeTextField(
+            bottomGradient: gradient,
             appContext: context,
             length: 6,
             errorAnimationController: controller,
@@ -40,6 +55,21 @@ void main() {
 
     final Widget app = Builder(
       builder: (context) {
+        final gradient = RadialGradient(
+          colors: [
+            Colors.lightBlue,
+            Colors.lightBlue.shade800,
+          ],
+          center: const Alignment(
+            -0.9,
+            -0.6,
+          ),
+          stops: const [
+            0.0,
+            1.0,
+          ],
+          radius: 2.4,
+        );
         return MaterialApp(
           theme: ThemeData(
               inputDecorationTheme: InputDecorationTheme(
@@ -50,6 +80,7 @@ void main() {
             backgroundColor: Colors.black,
             body: Builder(builder: (context) {
               return PinCodeTextField(
+                bottomGradient: gradient,
                 appContext: context,
                 autoFocus: true,
                 backgroundColor: Colors.transparent,

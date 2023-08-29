@@ -533,23 +533,17 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
   }
 
   // selects the right color for the field
-  Color _getColorFromIndex(int index) {
+  Gradient? _getGradientFromIndex(int index) {
     if (!widget.enabled) {
-      return _pinTheme.disabledColor;
+      return null;
     }
     if (((_selectedIndex == index) ||
             (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
         _focusNode!.hasFocus) {
-      return _pinTheme.selectedColor;
-    } else if (_selectedIndex > index) {
-      Color relevantActiveColor = _pinTheme.activeColor;
-      if (isInErrorMode) relevantActiveColor = _pinTheme.errorBorderColor;
-      return relevantActiveColor;
+      return widget.bottomGradient;
     }
 
-    Color relevantInActiveColor = _pinTheme.inactiveColor;
-    if (isInErrorMode) relevantInActiveColor = _pinTheme.errorBorderColor;
-    return relevantInActiveColor;
+    return null;
   }
 
   double _getBorderWidthForIndex(int index) {
@@ -885,7 +879,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
       result.add(
         Container(
           decoration: BoxDecoration(
-            gradient: widget.bottomGradient,
+            gradient: _getGradientFromIndex(i),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Container(
