@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import './constants/constants.dart';
@@ -77,6 +78,21 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final gradient = RadialGradient(
+      colors: [
+        Colors.lightBlue,
+        Colors.lightBlue.shade800,
+      ],
+      center: const Alignment(
+        -0.9,
+        -0.6,
+      ),
+      stops: const [
+        0.0,
+        1.0,
+      ],
+      radius: 2.4,
+    );
     return Scaffold(
       backgroundColor: Constants.primaryColor,
       body: GestureDetector(
@@ -138,64 +154,34 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                     horizontal: 30,
                   ),
                   child: PinCodeTextField(
-                    appContext: context,
-                    pastedTextStyle: TextStyle(
-                      color: Colors.green.shade600,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    length: 6,
-                    obscureText: true,
-                    obscuringCharacter: '*',
-                    obscuringWidget: const FlutterLogo(
-                      size: 24,
-                    ),
-                    blinkWhenObscuring: true,
-                    animationType: AnimationType.fade,
-                    validator: (v) {
-                      if (v!.length < 3) {
-                        return "I'm from validator";
-                      } else {
-                        return null;
-                      }
-                    },
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
-                      fieldHeight: 50,
-                      fieldWidth: 40,
-                      activeFillColor: Colors.white,
-                    ),
-                    cursorColor: Colors.black,
-                    animationDuration: const Duration(milliseconds: 300),
-                    enableActiveFill: true,
-                    errorAnimationController: errorController,
-                    controller: textEditingController,
+                    bottomGradient: gradient,
                     keyboardType: TextInputType.number,
-                    boxShadows: const [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        color: Colors.black12,
-                        blurRadius: 10,
-                      )
-                    ],
-                    onCompleted: (v) {
-                      debugPrint("Completed");
-                    },
-                    // onTap: () {
-                    //   print("Pressed");
-                    // },
-                    onChanged: (value) {
-                      debugPrint(value);
-                      setState(() {
-                        currentText = value;
-                      });
-                    },
-                    beforeTextPaste: (text) {
-                      debugPrint("Allowing to paste $text");
-                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                      return true;
-                    },
+                    appContext: context,
+                    onCompleted: (_) {},
+                    length: 5,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    obscureText: false,
+                    animationType: AnimationType.fade,
+                    hintCharacter: '•',
+                    cursorColor: Colors.red,
+                    hintStyle: TextStyle(
+                        color: Colors.grey.withOpacity(.2), fontSize: 30),
+                    enableActiveFill: true,
+                    pinTheme: PinTheme(
+                      selectedFillColor: Colors.white,
+                      inactiveFillColor: Colors.white,
+                      activeFillColor: Colors.white,
+                      fieldHeight: 56,
+                      fieldWidth: 54,
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white,
+                      disabledColor: Colors.white,
+                      selectedColor: Theme.of(context).primaryColor,
+                    ),
+                    animationDuration: const Duration(milliseconds: 300),
+                    beforeTextPaste: (text) => true,
+                    autoFocus: true,
+                    onChanged: (_) {},
                   ),
                 ),
               ),

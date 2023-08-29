@@ -138,6 +138,8 @@ class PinCodeTextField extends StatefulWidget {
   /// Theme for the pin cells. Read more [PinTheme]
   final PinTheme pinTheme;
 
+  final Gradient bottomGradient;
+
   /// Brightness dark or light choices for iOS keyboard.
   final Brightness? keyboardAppearance;
 
@@ -279,6 +281,7 @@ class PinCodeTextField extends StatefulWidget {
     this.useExternalAutoFillGroup = false,
     this.scrollPadding = const EdgeInsets.all(20),
     this.separatorBuilder,
+    required this.bottomGradient,
   })  : assert(obscuringCharacter.isNotEmpty),
         super(key: key);
 
@@ -881,68 +884,67 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
     for (int i = 0; i < widget.length; i++) {
       result.add(
         Container(
-            padding: _pinTheme.fieldOuterPadding,
-            child: AnimatedContainer(
-              curve: widget.animationCurve,
-              duration: widget.animationDuration,
-              width: _pinTheme.fieldWidth,
-              height: _pinTheme.fieldHeight,
+          decoration: BoxDecoration(
+            gradient: widget.bottomGradient,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Container(
+              margin: const EdgeInsetsDirectional.only(bottom: 2),
+              padding: _pinTheme.fieldOuterPadding,
               decoration: BoxDecoration(
-                color: widget.enableActiveFill
-                    ? _getFillColorFromIndex(i)
-                    : Colors.transparent,
-                boxShadow: (_pinTheme.activeBoxShadows != null ||
-                        _pinTheme.inActiveBoxShadows != null)
-                    ? _getBoxShadowFromIndex(i)
-                    : widget.boxShadows,
-                shape: _pinTheme.shape == PinCodeFieldShape.circle
-                    ? BoxShape.circle
-                    : BoxShape.rectangle,
-                borderRadius: borderRadius,
-                border: _pinTheme.shape == PinCodeFieldShape.underline
-                    ? Border(
-                        bottom: BorderSide(
-                          color: _getColorFromIndex(i),
-                          width: _getBorderWidthForIndex(i),
-                        ),
-                      )
-                    : Border.all(
-                        color: _getColorFromIndex(i),
-                        width: _getBorderWidthForIndex(i),
-                      ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
               ),
-              child: Center(
-                child: AnimatedSwitcher(
-                  switchInCurve: widget.animationCurve,
-                  switchOutCurve: widget.animationCurve,
-                  duration: widget.animationDuration,
-                  transitionBuilder: (child, animation) {
-                    if (widget.animationType == AnimationType.scale) {
-                      return ScaleTransition(
-                        scale: animation,
-                        child: child,
-                      );
-                    } else if (widget.animationType == AnimationType.fade) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: child,
-                      );
-                    } else if (widget.animationType == AnimationType.none) {
-                      return child;
-                    } else {
-                      return SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0, .5),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child,
-                      );
-                    }
-                  },
-                  child: buildChild(i),
+              child: AnimatedContainer(
+                curve: widget.animationCurve,
+                duration: widget.animationDuration,
+                width: _pinTheme.fieldWidth,
+                height: _pinTheme.fieldHeight,
+                decoration: BoxDecoration(
+                  color: widget.enableActiveFill
+                      ? _getFillColorFromIndex(i)
+                      : Colors.transparent,
+                  boxShadow: (_pinTheme.activeBoxShadows != null ||
+                          _pinTheme.inActiveBoxShadows != null)
+                      ? _getBoxShadowFromIndex(i)
+                      : widget.boxShadows,
+                  shape: _pinTheme.shape == PinCodeFieldShape.circle
+                      ? BoxShape.circle
+                      : BoxShape.rectangle,
                 ),
-              ),
-            )),
+                child: Center(
+                  child: AnimatedSwitcher(
+                    switchInCurve: widget.animationCurve,
+                    switchOutCurve: widget.animationCurve,
+                    duration: widget.animationDuration,
+                    transitionBuilder: (child, animation) {
+                      if (widget.animationType == AnimationType.scale) {
+                        return ScaleTransition(
+                          scale: animation,
+                          child: child,
+                        );
+                      } else if (widget.animationType == AnimationType.fade) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      } else if (widget.animationType == AnimationType.none) {
+                        return child;
+                      } else {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, .5),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        );
+                      }
+                    },
+                    child: buildChild(i),
+                  ),
+                ),
+              )),
+        ),
       );
       if (widget.separatorBuilder != null && i != widget.length - 1) {
         result.add(widget.separatorBuilder!(context, i));
